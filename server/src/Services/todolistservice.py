@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, func
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, func, insert
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -34,10 +34,18 @@ class ToDoListService():
 		session = Session()
 
 		try:
-			new_todolist = ToDoListModel(title=todo_list['title'], description=todo_list['description'])
-		
-			session.add(new_todolist)
+			stmt = (
+				insert(ToDoListModel)
+				.values(title=todo_list['title'], description=todo_list['description'])
+				.returning(ToDoListModel.id)
+			)
+
+			result = session.execute(stmt)
+			new_id = result.scalar()
+			
 			session.commit()
+
+			return new_id
 		finally:
 			session.close()
 
@@ -69,7 +77,6 @@ class ToDoListService():
 				todolist_item.updated_at = func.now()
 
 				session.commit()
-				print(f"UPDATED TODOLIST {todolist_item.title}")
 
 				return True
 

@@ -56,10 +56,6 @@ class TaskService():
 		finally:
 			session.close()
 
-		print("\n\n")
-		print(task_collection)
-		print("\n\n")
-
 		return task_collection
 	
 	def update(self, id: int, todo_list):

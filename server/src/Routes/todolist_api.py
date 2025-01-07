@@ -36,9 +36,9 @@ class ToDoAPI(Resource):
       'description': args['description']
     }
 
-    todolist_service.create(todolist)
+    new_todolist_id = todolist_service.create(todolist)
 
-    return {"status": 200, "message": "Lista de afazeres criada!"}
+    return {"status": 200, "message": "Lista de afazeres criada!", "id": new_todolist_id}
   
   def get(self):
     todolist_service = ToDoListService()
