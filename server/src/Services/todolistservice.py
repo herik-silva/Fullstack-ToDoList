@@ -8,11 +8,12 @@ Base = declarative_base()
 connection = engine.connect()
 
 class ToDoListModel(Base):
-	__tablename__ = 'todolist'
+	__tablename__ = 'todolist_with_task_length'
 
 	id = Column(Integer, primary_key=True)
 	title = Column(String(90), nullable=False)
 	description = Column(String)
+	task_length = Column(Integer, nullable=False, default=0)
 	created_at = Column(DateTime, default=func.now())
 	updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
@@ -24,6 +25,7 @@ class ToDoListModel(Base):
 			'id': self.id,
 			'title': self.title,
 			'description': self.description,
+			'task_length': self.task_length,
 			'created_at': self.created_at,
 			'updated_at': self.updated_at
 		}
@@ -85,4 +87,24 @@ class ToDoListService():
 			session.rollback()
 		finally:
 			print("CLOSE SESSION")
+			session.close()
+
+	def delete(self, id: int):
+		Session = sessionmaker(bind=engine)
+		session = Session()
+
+		try:
+			todolist_item = session.query(ToDoListModel).filter_by(id=id).first()
+			print(todolist_item)
+
+			if todolist_item:
+				session.delete(todolist_item)
+				session.commit()
+				
+				return True
+				
+			return False
+		except:
+			session.rollback()
+		finally:
 			session.close()

@@ -14,7 +14,7 @@ class ToDoListAPI(Resource):
       
       return jsonify(todolist_collection.to_dict())
     except:
-      return {'status': 404, 'message': "lista de afazeres não encontrada."}
+      return {'status': 404, 'message': "Lista de afazeres não encontrada."}
     
   def put(self, id: str):
     todolist_service = ToDoListService()
@@ -23,9 +23,19 @@ class ToDoListAPI(Resource):
     if todolist_service.update(id, args):
       return {'status': 200, 'message': "Lista de afazeres atualizada!"}
 
-    return {'status': 404, 'message': "lista de afazeres não encontrada."}
-
+    return {'status': 404, 'message': "Lista de afazeres não encontrada."}
   
+  def delete(self, id: str):
+    try:
+      todolist_service = ToDoListService()
+      if todolist_service.delete(int(id)):
+        return {'status': 200, 'message': "Lista de afazeres removida!"}
+      
+      return {'status': 404, 'message': "Lista de afazeres não encontrada."}
+    except:
+      return {'status': 500, 'message': "Não foi possível excluir a lista de afazeres."}
+
+  # 
 class ToDoAPI(Resource):
   def post(self):
     todolist_service = ToDoListService()
