@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalFooter,
   Button,
+  useToast,
 } from "@chakra-ui/react";
 import useRequiredField from "../../../core/hooks/use-required-field";
 import InputComponent from "../../input";
@@ -24,6 +25,7 @@ const CreateTodolistModal: React.FC<CreateTodolistModalProps> = ({
   handleOnClose,
 }) => {
   const store = useMst();
+  const toast = useToast();
 
   const titleField = useRequiredField("", (value) => value.length >= 4);
   const descriptionField = useRequiredField("", (value) => value.length >= 0);
@@ -44,17 +46,23 @@ const CreateTodolistModal: React.FC<CreateTodolistModalProps> = ({
       request
         .postAPI(url, body)
         .then((value) => {
-          const response: TodolistAPIInstance = {
+          const response = {
             id: value.id,
             title: data.title,
             description: data.description,
             task_length: 0,
-          };
+            task_list: [],
+          } as unknown as TodolistAPIInstance;
 
-          console.groupCollapsed("ARMAZENAR NO STORE");
-          console.log(response);
-          console.groupEnd();
           store.addTodo(response);
+          toast({
+            description: value.message,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "bottom-left",
+            variant: "left-accent",
+          });
         })
         .finally(() => handleOnClose());
     }

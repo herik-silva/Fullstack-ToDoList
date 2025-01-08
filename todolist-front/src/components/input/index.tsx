@@ -3,10 +3,11 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
+  FormControlProps,
 } from "@chakra-ui/react";
 import { ChangeEvent, HTMLInputTypeAttribute } from "react";
 
-type InputComponentProps = {
+type InputComponentProps = FormControlProps & {
   label: string;
   formErrorMessage?: string;
   handleOnChangeValue: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -26,11 +27,13 @@ const InputComponent: React.FC<InputComponentProps> = ({
   type = "text",
   value = "",
   isRequired = false,
+  ...args
 }) => {
   return (
     <FormControl
       isRequired={isRequired}
       isInvalid={isRequired ? isError : false}
+      {...args}
     >
       <FormLabel>{label}</FormLabel>
       <Input

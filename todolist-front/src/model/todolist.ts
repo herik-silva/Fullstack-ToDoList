@@ -6,18 +6,28 @@ export const ToDoListModel = types.model({
   description: types.string,
 });
 
-export const TodolistAPIModel = types.model({
+export const TaskModel = types.model({
   id: types.identifierNumber,
-  title: types.string,
   description: types.string,
-  task_length: types.number,
+  done: types.boolean,
 });
 
-export const Task = types.model({
-  description: "",
-  todolist_id: 0,
-  done: false,
-});
+export const TodolistAPIModel = types
+  .model({
+    id: types.identifierNumber,
+    title: types.string,
+    description: types.string,
+    task_length: types.number,
+    task_list: types.array(TaskModel),
+  })
+  .actions((self) => ({
+    toggleTaskDone(task_id: number) {
+      const target = self.task_list.find((value) => value.id == task_id);
+
+      if (target) target.done = !target.done;
+    },
+  }));
 
 export type TodoListInstance = Instance<typeof ToDoListModel>;
 export type TodolistAPIInstance = Instance<typeof TodolistAPIModel>;
+export type TaskInstance = Instance<typeof TaskModel>;

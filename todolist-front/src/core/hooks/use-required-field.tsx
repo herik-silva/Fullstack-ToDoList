@@ -13,13 +13,6 @@ const useRequiredField = (
     const value = event.target.value;
     setIsError(!callback(value));
     setField(value);
-
-    if (import.meta.env.DEV && import.meta.env.USE_DEBUG) {
-      console.groupCollapsed("Custom Hook useRequiredField");
-      console.log(`Valor: ${value}`);
-      console.log(`Erro: ${!callback(value)}`);
-      console.groupEnd();
-    }
   };
 
   const resetField = () => {

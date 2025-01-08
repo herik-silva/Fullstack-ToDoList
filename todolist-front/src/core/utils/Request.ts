@@ -24,6 +24,18 @@ class Request<T> {
 
     return fetch(url, config).then((value) => value.json());
   }
+
+  putAPI(url: string, body: BodyInit, options?: RequestInit) {
+    const config: RequestInit = options
+      ? options
+      : {
+          method: "PUT",
+          body: body,
+          headers: { "Content-Type": "application/json" },
+        };
+
+    return fetch(url, config);
+  }
 }
 
 export default Request;

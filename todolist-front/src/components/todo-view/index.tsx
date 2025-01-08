@@ -6,17 +6,18 @@ import {
   Flex,
   Text,
   CardProps,
-  Button,
 } from "@chakra-ui/react";
 import { TodolistAPIInstance } from "../../model/todolist";
 import { RiTaskLine } from "react-icons/ri";
 import RemoveTodolist from "../remove-todolist";
+import TaskView from "../task-view";
+import { observer } from "mobx-react-lite";
 
 type TodoViewProps = CardProps & {
   todolist: TodolistAPIInstance;
 };
 
-const TodoView: React.FC<TodoViewProps> = ({ todolist, ...args }) => {
+const TodoView = observer<TodoViewProps>(({ todolist, ...args }) => {
   return (
     <Card key={todolist.id} {...args}>
       <CardHeader>
@@ -32,14 +33,12 @@ const TodoView: React.FC<TodoViewProps> = ({ todolist, ...args }) => {
             <Text>{todolist.task_length}</Text>
           </Flex>
           <Flex gap="10px" alignItems="center">
-            <Button variant="ghost" colorScheme="gray">
-              Ver mais
-            </Button>
+            <TaskView todolist={todolist} />
           </Flex>
         </Flex>
       </CardBody>
     </Card>
   );
-};
+});
 
 export default TodoView;
