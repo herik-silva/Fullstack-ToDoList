@@ -48,7 +48,7 @@ const CreateTodolistModal: React.FC<CreateTodolistModalProps> = ({
             id: value.id,
             title: data.title,
             description: data.description,
-            taskLength: 0,
+            task_length: 0,
           };
 
           console.groupCollapsed("ARMAZENAR NO STORE");

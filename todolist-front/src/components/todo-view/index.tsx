@@ -29,7 +29,7 @@ const TodoView: React.FC<TodoViewProps> = ({ todolist, ...args }) => {
         <Flex justifyContent="space-between">
           <Flex alignItems="center" gap="5px">
             <RiTaskLine />
-            <Text>{todolist.taskLength}</Text>
+            <Text>{todolist.task_length}</Text>
           </Flex>
           <Flex gap="10px" alignItems="center">
             <Button variant="ghost" colorScheme="gray">

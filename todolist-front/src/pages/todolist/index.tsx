@@ -4,8 +4,17 @@ import CreateTodolist from "../../components/create-todolist";
 import { Provider, rootStore } from "../../model/rootstore";
 import TodoView from "../../components/todo-view";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
+import Request from "../../core/utils/Request";
 
 const ToDoListPage = observer(() => {
+  useEffect(() => {
+    const request = new Request();
+    request
+      .getAPI(`${import.meta.env.VITE_API_URL}/todolist`)
+      .then((value) => rootStore.updateTodolist(value));
+  }, []);
+
   return (
     <Provider value={rootStore}>
       <Template>

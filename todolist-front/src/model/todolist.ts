@@ -10,7 +10,7 @@ export const TodolistAPIModel = types.model({
   id: types.identifierNumber,
   title: types.string,
   description: types.string,
-  taskLength: types.number,
+  task_length: types.number,
 });
 
 export const Task = types.model({

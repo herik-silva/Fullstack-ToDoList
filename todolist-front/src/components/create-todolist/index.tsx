@@ -14,9 +14,14 @@ const CreateTodolist: React.FC = () => {
       <Button
         variant="solid"
         leftIcon={<MdFormatListBulletedAdd />}
-        colorScheme="green"
+        bg="var(--btn-add-todolist-bg)"
+        color="var(--btn-text-color)"
         onClick={handleOnOpen}
+        transition=".1s ease-in all"
         w="150px"
+        _hover={{
+          bg: "var(--btn-add-todolist-bg-hover)",
+        }}
       >
         Nova Lista
       </Button>

@@ -11,10 +11,12 @@ export const RootStoreModel = types
       self.todos.put(todolist);
     },
     removeTodo(id: number) {
-      if (self.todos.has(id) === false) return false;
+      if (self.todos.has(id)) return self.todos.delete(id.toString());
 
-      self.todos.delete(id.toString());
-      return true;
+      return false;
+    },
+    updateTodolist(newTodolist: TodolistAPIInstance[]) {
+      newTodolist.map((item) => self.todos.put(item));
     },
   }))
   .views((self) => ({
