@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, func
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime, func, text, insert
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -18,14 +18,12 @@ class TaskModel(Base):
 	done = Column(Boolean, default=False)
 
 	def __repr__(self):
-		return f"Task: {self.description} - {self.created_at}"
+		return f"Task: {self.description} - {self.todolist_id}"
 	
 	def to_dict(self):
 		return {
 			'id': self.id,
 			'description': self.description,
-			'created_at': self.created_at,
-			'updated_at': self.updated_at,
 			'done': self.done,
 			'todolist_id': self.todolist_id
 		}
@@ -36,11 +34,23 @@ class TaskService():
 		session = Session()
 
 		try:
-			new_task = TaskModel(description=task['description'],
-			todolist_id=task['todolist_id'])
-		
-			session.add(new_task)
+			stmt = (
+				insert(TaskModel)
+				.values(description=task['description'], todolist_id=task['todolist_id'])
+				.returning(TaskModel.id)
+			)
+
+			result = session.execute(stmt)
+			new_id = result.scalar()
+			
 			session.commit()
+
+			return new_id
+			# new_task = TaskModel(description=task['description'],
+			# todolist_id=task['todolist_id'])
+		
+			# session.add(new_task)
+			# session.commit()
 		finally:
 			session.close()
 
@@ -58,17 +68,32 @@ class TaskService():
 
 		return task_collection
 	
-	def update(self, id: int, todo_list):
+	def findByTodolist(self, id: int):
+		Session = sessionmaker(bind=engine)
+		session = Session()
+
+		try:
+			if id:
+				query = text("SELECT id, description, done, todolist_id FROM task WHERE todolist_id = :todolist_id")
+				result = session.execute(query, {"todolist_id": id})
+
+				task_collection = [
+					TaskModel(id=row.id, description=row.description, done=row.done, todolist_id=row.todolist_id) for row in result
+				]
+
+				return task_collection
+		finally:
+			session.close()
+	
+	def update(self, id: int, task):
 		Session = sessionmaker(bind=engine)
 		session = Session()
 
 		try:
 			task_item = session.query(TaskModel).filter_by(id=id).first()
-
 			if task_item:
-				task_item.title = todo_list.title
-				task_item.description = todo_list.description
-				task_item.updated_at = func.now()
+				task_item.description = task.description
+				task_item.done = task.done
 
 				session.commit()
 
