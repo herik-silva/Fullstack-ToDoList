@@ -7,8 +7,24 @@ Base = declarative_base()
 
 connection = engine.connect()
 
-class ToDoListModel(Base):
+class ToDoListViewModel(Base):
 	__tablename__ = 'todolist_with_task_length'
+
+	id = Column(Integer, primary_key=True)
+	title = Column(String(90), nullable=False)
+	description = Column(String)
+	task_length = Column(Integer, nullable=False, default=0)
+
+	def to_dict(self):
+		return {
+			'id': self.id,
+			'title': self.title,
+			'description': self.description,
+			'task_length': self.task_length,
+		}
+
+class ToDoListModel(Base):
+	__tablename__ = 'todolist'
 
 	id = Column(Integer, primary_key=True)
 	title = Column(String(90), nullable=False)
@@ -26,8 +42,6 @@ class ToDoListModel(Base):
 			'title': self.title,
 			'description': self.description,
 			'task_length': self.task_length,
-			'created_at': self.created_at,
-			'updated_at': self.updated_at
 		}
 
 class ToDoListService():
@@ -57,9 +71,9 @@ class ToDoListService():
 
 		try:
 			if id:
-				todolist_collection = session.query(ToDoListModel).filter_by(id=id).first()
+				todolist_collection = session.query(ToDoListViewModel).filter_by(id=id).first()
 			else:
-				todolist_collection = session.query(ToDoListModel).all()
+				todolist_collection = session.query(ToDoListViewModel).all()
 		finally:
 			session.close()
 
@@ -86,7 +100,6 @@ class ToDoListService():
 		except Exception as e:
 			session.rollback()
 		finally:
-			print("CLOSE SESSION")
 			session.close()
 
 	def delete(self, id: int):
