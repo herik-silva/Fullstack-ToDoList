@@ -46,11 +46,6 @@ class TaskService():
 			session.commit()
 
 			return new_id
-			# new_task = TaskModel(description=task['description'],
-			# todolist_id=task['todolist_id'])
-		
-			# session.add(new_task)
-			# session.commit()
 		finally:
 			session.close()
 
