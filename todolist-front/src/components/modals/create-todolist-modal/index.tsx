@@ -41,6 +41,9 @@ const CreateTodolistModal: React.FC<CreateTodolistModalProps> = ({
         description: descriptionField.bind.value,
       };
 
+      titleField.resetField();
+      descriptionField.resetField();
+
       const body = JSON.stringify(data);
 
       request
@@ -96,7 +99,15 @@ const CreateTodolistModal: React.FC<CreateTodolistModalProps> = ({
           <Button variant="ghost" mr={3} onClick={handleOnClose}>
             Cancelar
           </Button>
-          <Button variant="solid" colorScheme="green" onClick={handleOnConfirm}>
+          <Button
+            variant="solid"
+            onClick={handleOnConfirm}
+            bg="var(--btn-add-todolist-bg)"
+            color="var(--btn-text-color)"
+            _hover={{
+              bg: "var(--btn-add-todolist-bg-hover)",
+            }}
+          >
             Confirmar
           </Button>
         </ModalFooter>

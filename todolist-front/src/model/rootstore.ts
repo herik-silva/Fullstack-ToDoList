@@ -34,7 +34,7 @@ export const RootStoreModel = types
 
       if (taskList) {
         const indexToRemove = taskList.findIndex((item) => item.id == id);
-        console.log(taskList[indexToRemove]);
+        taskList.remove(taskList[indexToRemove]);
       }
     },
     updateTaskList(todolistId: number, newTaskList: TaskInstance[]) {

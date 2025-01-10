@@ -14,7 +14,7 @@ import {
 import InputComponent from "../../input";
 import useRequiredField from "../../../core/hooks/use-required-field";
 import { TaskInstance, TodolistAPIInstance } from "../../../model/todolist";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Request from "../../../core/utils/Request";
 import TaskComponent from "../../task";
 import { useMst } from "../../../model/rootstore";
@@ -31,6 +31,8 @@ const TaskViewModal = observer<TaskViewModalProps>(
     const store = useMst();
     const taskInput = useRequiredField("", (value) => value.length > 0);
 
+    const taskList = Array.from(store.todos.get(todolist.id)?.task_list || []);
+
     const handleOnAddTask = () => {
       const url = `${import.meta.env.VITE_API_URL}/task`;
       const request = new Request();
@@ -38,6 +40,8 @@ const TaskViewModal = observer<TaskViewModalProps>(
         todolist_id: todolist.id,
         description: taskInput.bind.value,
       };
+
+      taskInput.resetField();
 
       const body = JSON.stringify(data);
 
@@ -80,13 +84,15 @@ const TaskViewModal = observer<TaskViewModalProps>(
               <Flex flexDir="column" gap="5px" mt="5px">
                 <Heading size="sm">Tarefas</Heading>
                 <Stack spacing={2} ml="5px">
-                  {store.todos.get(todolist.id)?.task_list.map((item) => (
-                    <TaskComponent
-                      key={item.id}
-                      todolistId={todolist.id}
-                      task={item}
-                    />
-                  ))}
+                  {taskList
+                    .sort((a, b) => +a.done - +b.done)
+                    .map((item) => (
+                      <TaskComponent
+                        key={item.id}
+                        todolistId={todolist.id}
+                        task={item}
+                      />
+                    ))}
                 </Stack>
               </Flex>
               <Flex alignItems="end" gap="5px" mt="20px">

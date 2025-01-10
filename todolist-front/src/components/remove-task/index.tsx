@@ -4,13 +4,14 @@ import { useState } from "react";
 import { TaskInstance } from "../../model/todolist";
 import Request from "../../core/utils/Request";
 import { useMst } from "../../model/rootstore";
+import { observer } from "mobx-react-lite";
 
 type RemoveTodolistProps = {
   todolist_id: number;
   task: TaskInstance;
 };
 
-const RemoveTask: React.FC<RemoveTodolistProps> = ({ todolist_id, task }) => {
+const RemoveTask = observer<RemoveTodolistProps>(({ todolist_id, task }) => {
   const [confirmDelete, setconfirmDelete] = useState(false);
   const store = useMst();
 
@@ -20,9 +21,7 @@ const RemoveTask: React.FC<RemoveTodolistProps> = ({ todolist_id, task }) => {
     const url = `${import.meta.env.VITE_API_URL}/task/${task.id}`;
     const request = new Request();
 
-    request.deleteAPI(url).then(() => {
-      store.removeTask(todolist_id, task.id);
-    });
+    request.deleteAPI(url).then(() => store.removeTask(todolist_id, task.id));
   };
 
   return (
@@ -48,6 +47,6 @@ const RemoveTask: React.FC<RemoveTodolistProps> = ({ todolist_id, task }) => {
       )}
     </>
   );
-};
+});
 
 export default RemoveTask;
