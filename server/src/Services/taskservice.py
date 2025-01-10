@@ -99,3 +99,23 @@ class TaskService():
 			session.rollback()
 		finally:
 			session.close()
+	
+	def delete(self, id: int):
+		Session = sessionmaker(bind=engine)
+		session = Session()
+
+		try:
+			task_item = session.query(TaskModel).filter_by(id=id).first()
+			print(task_item)
+
+			if task_item:
+				session.delete(task_item)
+				session.commit()
+				
+				return True
+				
+			return False
+		except:
+			session.rollback()
+		finally:
+			session.close()

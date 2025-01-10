@@ -12,7 +12,6 @@ class TaskByTodolistAPI(Resource):
     try:
       task_service = TaskService()
       task_collection = task_service.findByTodolist(int(id))
-      print(task_collection)
       return jsonify([task.to_dict() for task in task_collection])
     
     except Exception as e:
@@ -32,16 +31,22 @@ class TaskAPI(Resource):
   def put(self, id: str):
     task_service = TaskService()
     args = parser.parse_args()
-
-    print("\n\n")
-    print("TESTE")
-    print(args)
-    print("\n\n")
       
     if task_service.update(id, args):
       return {'status': 200, 'message': "Tarefa atualizada!"}
 
     return {'status': 404, 'message': "Tarefa não encontrada."}
+
+  def delete(self, id: str):
+    try:
+      task_service = TaskService()
+      if task_service.delete(int(id)):
+        return {'status': 200, 'message': "Tarefa removida!"}
+      
+      return {'status': 404, 'message': "Tarefa não encontrada."}
+    except:
+      return {'status': 500, 'message': "Não foi possível excluir a Tarefa."}
+    
 
   
 class TaskPostAPI(Resource):
